@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  alex-app:
+    build:
+      context: .
+      dockerfile: deployments/Dockerfile.app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./deployments/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - alex-db
+    networks:
+      - alex_network
+  alex-db:
+    build:
+      context: .
+      dockerfile: deployments/Dockerfile.db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: lab2
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 27892789
+    ports:
+      - "3307:3306"
+    networks:
+      - alex_network
+networks:
+  alex_network:
+    driver: bridge
